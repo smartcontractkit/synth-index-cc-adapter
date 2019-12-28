@@ -8,7 +8,7 @@
   "dependencies": {
     "decimal.js": "^10.2.0",
     "request-promise": "^4.2.5",
-    "synthetix": "^2.12.0-alpha"
+    "synthetix": "^2.17.6"
   },
   "devDependencies": {
     "body-parser": "^1.19.0",
