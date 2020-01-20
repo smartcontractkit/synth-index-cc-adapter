@@ -2,6 +2,14 @@
 
 This adapter pulls the indexes for Synthetix's index synths, retrieves the current market price for each asset from CryptoCompare, and calculates a weighted index.
 
+## Environment variables
+
+| Variable      |               | Description | Example |
+|---------------|:-------------:|------------- |:---------:|
+| `API_KEY`  | **Required**  | Your CryptoCompare API Key | `ABCDEFGHJIKLMo64FtaRLRR5BdHEESmha49TM` |
+
+To get CryptoCompare API credentials, check out https://min-api.cryptocompare.com/.
+
 ## Install
 
 ```bash
@@ -18,6 +26,16 @@ npm test
 
 ```bash
 zip -r cl-synth-index-cc.zip .
+```
+## Run with Docker
+
+```bash
+docker build . -t synth-index-cc-adapter
+docker run -itd \
+    -p 8080:8080 \
+    -e API_KEY="Your_cryptocompare_API_key" \
+    --name "YOUR_CUSTOM_CONTAINER_NAME" \
+    synth-index-cc-adapter
 ```
 
 ## Install to AWS Lambda
