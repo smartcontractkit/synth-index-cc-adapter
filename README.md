@@ -34,7 +34,6 @@ docker build . -t synth-index-cc-adapter
 docker run -itd \
     -p 8080:8080 \
     -e API_KEY="Your_cryptocompare_API_key" \
-    --name "YOUR_CUSTOM_CONTAINER_NAME" \
     synth-index-cc-adapter
 ```
 
