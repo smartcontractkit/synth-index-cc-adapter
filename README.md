@@ -27,6 +27,7 @@ npm test
 ```bash
 zip -r cl-synth-index-cc.zip .
 ```
+
 ## Run with Docker
 
 ```bash
