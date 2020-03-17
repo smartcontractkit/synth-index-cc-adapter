@@ -3,24 +3,32 @@ const snx = require('synthetix')
 const Decimal = require('decimal.js')
 
 const getPriceData = async (synth) => {
-  return rp({
-    url: 'https://min-api.cryptocompare.com/data/price',
-    qs: {
-      tsyms: 'USD',
-      fsym: synth.symbol
-    },
-    json: true
-  })
+  try {
+    return await rp({
+      url: 'https://min-api.cryptocompare.com/data/price',
+      qs: {
+        tsyms: 'USD',
+        fsym: synth.symbol
+      },
+      json: true
+    })
+  } catch (error) {
+    throw error.message
+  }
 }
 
 const calculateIndex = (indexes) => {
   let value = new Decimal(0)
-  indexes.forEach(i => {
-    const price = i.priceData.USD;
-    if (price <= 0)
-      throw "invalid price";
-    value = value.plus(new Decimal(i.units).times(new Decimal(price)))
-  })
+  try {
+    indexes.forEach(i => {
+      const price = i.priceData.USD
+      if (price <= 0)
+        throw 'invalid price'
+      value = value.plus(new Decimal(i.units).times(new Decimal(price)))
+    })
+  } catch (error) {
+    throw error.message
+  }
   return value.toNumber()
 }
 
@@ -28,35 +36,25 @@ const createRequest = async (input, callback) => {
   const asset = input.data.asset || 'sCEX'
   const datas = snx.getSynths({ network: 'mainnet' }).filter(({ index, inverted }) => index && !inverted)
   const data = datas.find(d => d.name.toLowerCase() === asset.toLowerCase())
-  await Promise.all(data.index.map(async (synth) => {
-    synth.priceData = await getPriceData(synth)
-  })).catch(err => {
+  try {
+    await Promise.all(data.index.map(async (synth) => {
+      synth.priceData = await getPriceData(synth)
+    }))
+    data.result = calculateIndex(data.index)
+    callback(200, {
+      jobRunID: input.id,
+      data: data,
+      result: data.result,
+      statusCode: 200
+    })
+  } catch (error) {
     callback(500, {
       jobRunID: input.id,
       status: 'errored',
-      error: err,
+      error: error,
       statusCode: 500
     })
-  })
-
-  try {
-    data.result = calculateIndex(data.index);
-  } catch (e) {
-    callback(500, {
-      jobRunID: input.id,
-      status: 'errored',
-      error: "failed getting price",
-      statusCode: 500
-    });
-    return
   }
-
-  callback(200, {
-    jobRunID: input.id,
-    data: data,
-    result: data.result,
-    statusCode: 200
-  })
 }
 
 exports.gcpservice = (req, res) => {

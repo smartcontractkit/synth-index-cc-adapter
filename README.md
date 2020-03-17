@@ -13,13 +13,13 @@ To get CryptoCompare API credentials, check out https://min-api.cryptocompare.co
 ## Install
 
 ```bash
-npm install
+yarn
 ```
 
 ## Test
 
 ```bash
-npm test
+yarn test
 ```
 
 ## Create the zip

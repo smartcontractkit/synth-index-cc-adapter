@@ -15,7 +15,6 @@ describe('createRequest', () => {
         assert.equal(statusCode, 200)
         assert.equal(data.jobRunID, jobID)
         assert.isNotEmpty(data.data)
-        console.log(JSON.stringify(data, null, 1))
         done()
       })
     })
@@ -25,7 +24,7 @@ describe('createRequest', () => {
     const req = {
       id: jobID,
       data: {
-        asset: 'sCEX'
+        asset: 'sDEFI'
       }
     }
 
@@ -34,7 +33,6 @@ describe('createRequest', () => {
         assert.equal(statusCode, 200)
         assert.equal(data.jobRunID, jobID)
         assert.isNotEmpty(data.data)
-        console.log(JSON.stringify(data, null, 1))
         done()
       })
     })
